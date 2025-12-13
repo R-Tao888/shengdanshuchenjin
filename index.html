@@ -31,18 +31,19 @@
         
         /* 摄像头：右上角 */
         #video-container {
-            position: absolute; top: 20px; right: 20px; width: 160px; height: 120px; z-index: 2;
-            border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 8px; overflow: hidden;
+            position: absolute; top: 20px; right: 20px; /*width: 160px; height: 120px;*/ z-index: 2;
+            border: 2px solid #000; border-radius: 8px; overflow: hidden;
             transform: scaleX(-1); box-shadow: 0 0 15px rgba(0,0,0,0.5);
             background: rgba(0,0,0,0.5);
             transition: opacity 0.5s; 
         }
         #input-video { 
-            width: 100%; height: 100%; object-fit: cover; opacity: 0.6; 
+            width: 0; height: 0;
+            object-fit: cover; opacity: 0.6; 
             position: absolute; top: 0; left: 0;
         }
         #skeleton-canvas {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            position: absolute; top: 0; left: 0; width: 0; height: 0;
             z-index: 10;
         }
 
@@ -57,11 +58,15 @@
             background: linear-gradient(to right, #fff, #d4af37, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        .instructions {
-            font-size: 0.9rem; color: #eee; line-height: 1.8; max-width: 240px;
+        #instructions {
+            font-size: 0.9rem; color: #eee; line-height: 1.5; max-width: 230px;
             background: rgba(20, 20, 20, 0.7); padding: 15px; border-radius: 8px;
             border-left: 3px solid #d4af37; backdrop-filter: blur(5px);
             border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        #instructions:hover {
+            color: rgba(20, 20, 20, 0.7); 
+            background: #eee;
         }
         .highlight { color: #d4af37; font-weight: bold; }
         #status-text { margin-bottom: 10px; font-size: 1rem; color: #fff; font-weight: bold; }
@@ -82,7 +87,7 @@
 
         /* 全屏按钮 */
         #fullscreen-btn {
-            position: absolute; top: 30px; right: 200px; z-index: 20;
+            position: absolute; top: 30px; right: 10px; z-index: 20;
             background: rgba(0,0,0,0.5); color: #d4af37; border: 1px solid #d4af37;
             width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
             display: flex; align-items: center; justify-content: center;
@@ -91,15 +96,17 @@
         #fullscreen-btn:hover { background: #d4af37; color: #000; }
 
         /* 隐藏 UI 的类 */
+        .hide-ui #instructions,
         .hide-ui #video-container,
         .hide-ui #upload-btn {
             opacity: 0;
             pointer-events: none;
         }
-        
+
         .hide-ui #fullscreen-btn {
             opacity: 0.3;
         }
+        
         .hide-ui #fullscreen-btn:hover {
             opacity: 1;
         }
@@ -115,6 +122,7 @@
     </script>
     <script>
         var temp = 1
+        var temp2 = 0
         var tupian = 0
     </script>
 </head>
@@ -134,13 +142,13 @@
         <div id="ui-layer">
             <h1>Jewel Christmas</h1>
             <div id="status-text">系统初始化...</div>
-            <div class="instructions">
+            <div id="instructions">
                 • <span class="highlight">握拳</span> : 聚合成树<br/>
                 • <span class="highlight">张开手</span> : 星云散开<br/>
                 • <span class="highlight">向右划动</span> : 惯性拨动 (像拨地球仪)<br/>
                 • <span class="highlight">捏合手指</span> : 抓取照片(需上传)
             </div>
-            <button id="upload-btn" onclick="document.getElementById('file-input').click()">上传照片</button>
+            <button id="upload-btn" onclick="getElementById('file-input').click(),tupian = 1">上传照片</button>
             <input type="file" id="file-input" multiple accept="image/*">
         </div>
         <div id="loading">CRAFTING JEWELS...</div>
@@ -204,18 +212,22 @@
             bgMusic.play().catch(e => {
                 console.log('播放被阻止:', e);
             });
-            if(temp == 1) {
+            if(tupian == 1 ) {
                 const wrapper = document.getElementById('canvas-wrapper');
                 wrapper.classList.toggle('hide-ui');
-                temp = 0
+                temp = 1
+                
+                if(temp2 == 0){
+                    requestFullScreen();
+                    temp2 = 1
+                }
+                else {
+                    document.exitFullscreen();
+                    temp2 = 0
+                }
             }
-            if(tupian == 0){
-                requestFullScreen();
-                tupian = 1
-            }
-            else {
-                document.exitFullscreen();
-                tupian = 0
+            else{
+                alert('请上传照片！')
             }
         };
 
