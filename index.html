@@ -283,20 +283,24 @@
             const targetAspect = 16 / 9;
             const windowAspect = window.innerWidth / window.innerHeight;
             let width, height;
+            width = window.innerWidth
+            height = window.innerHeight
 
-            if (windowAspect > targetAspect) {
-                // 窗口更宽，以高度为准
-                height = window.innerHeight;
-                width = height * targetAspect;
-            } else {
-                // 窗口更高，以宽度为准
-                width = window.innerWidth;
-                height = width / targetAspect;
-            }
+            // if (windowAspect > targetAspect) {
+            //     // 窗口更宽，以高度为准
+            //     height = window.innerHeight;
+            //     width = height * targetAspect;
+            // } else {
+            //     // 窗口更高，以宽度为准
+            //     width = window.innerWidth;
+            //     height = width / targetAspect;
+            // }
 
             const wrapper = document.getElementById('canvas-wrapper');
-            wrapper.style.width = width + 'px';
-            wrapper.style.height = height + 'px';
+            //wrapper.style.width = width + 'px';
+            //wrapper.style.height = height + 'px';
+            wrapper.style.width = window.innerWidth + 'px';
+            wrapper.style.height = window.innerHeight + 'px';
             
             return { width, height };
         }
